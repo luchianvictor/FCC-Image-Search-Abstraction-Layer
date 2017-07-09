@@ -12,7 +12,5 @@ Here are the specific user stories you should implement for this project:
 * User Story: I can get a list of the most recently submitted search strings.
 
 
-Made by [Fog Creek](https://fogcreek.com/)
--------------------
+ [x] save search queries inside mongodb;
 
-\ ゜o゜)ノ

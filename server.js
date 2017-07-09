@@ -2,14 +2,20 @@
 // where your node app starts
 
 // init project
-var express = require('express');
+const express = require('express');
 const google = require("googleapis");
 const cs = google.customsearch("v1");
-// const url = require("url");
+const mongo = require('mongodb').MongoClient;
 var app = express();
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
+
+let queries = [];
+//connecting to the mongo database
+mongo.connect(process.env.BASE, function(err, db) {
+              if (err) throw err;
+              queries = db.collection("queries");
+              // console.log(queries);
+              });
 
 
 // http://expressjs.com/en/starter/static-files.html
@@ -21,21 +27,18 @@ app.get("/", function (request, response) {
 });
 
 
-let latest = [];
 
 app.get("/api/latest/imagesearch", (req, res) => {
-  let show = [];
-  let endLength = (latest.length-10 < 0) ? 0 : latest.length-10;
-  for(let i = latest.length-1; i > endLength-1; i--){
-    show.push(latest[i]);
-  }
-  res.json(show);
+  queries.find().toArray(function(err,docs) {
+    if (err) throw err;
+    res.json(docs);
+  });
 })
 
 app.get("/api/imagesearch/:q", (req, res) => {
   let q = req.params.q || "";
   let offset = req.query.offset || 0;
-  latest.push({
+  queries.insert({
     term: q,
     when: new Date()
   });
@@ -64,7 +67,6 @@ function getResults(q, offset, callback){
     start: ++offset
   }, (err, result) => {
     if(err) console.log(err);
-    console.log(result);
     result = result.items;
     
     let filtered = [];
