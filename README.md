@@ -12,5 +12,5 @@ Here are the specific user stories you should implement for this project:
 * User Story: I can get a list of the most recently submitted search strings.
 
 
- [x] save search queries inside mongodb;
+- [x] save search queries inside mongodb;
 
